@@ -12,6 +12,41 @@ lazy val root = (project in file("."))
       "org.scalamock" %% "scalamock" % "4.4.0" % Test,
       "org.mockito" %% "mockito-scala" % "1.11.3" % Test
     ),
+
+    homepage := Some(url("https://github.com/adrian-shyshkovskyi/scala-hello-world")),
+
+    licenses := Seq("Apache 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
+
+    scmInfo := Some(ScmInfo(
+      url("https://github.com/adrian-shyshkovskyi/scala-hello-world"),
+      "scm:git:git@github.com/adrian-shyshkovskyi/scala-hello-world.git",
+      Some("scm:git:git@github.com/adrian-shyshkovskyi/scala-hello-world.git"))),
+
+    publishMavenStyle := true,
+
+    publishTo := {
+      val nexus = "https://oss.sonatype.org/"
+      if (isSnapshot.value)
+        Some("snapshots" at nexus + "content/repositories/snapshots")
+      else
+        Some("releases" at nexus + "service/local/staging/deploy/maven2")
+    },
+
+    pomExtra :=
+      <licenses>
+        <license>
+          <name>Apache License, Version 2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+          <distribution>repo</distribution>
+        </license>
+      </licenses>,
+
+    developers := List(
+      Developer("adrian-shyshkovskyi", "Adrian Shyshkovskyi", "adrian.shyshkovskyi@gmail.com", url("https://github.com/adrian-shyshkovskyi"))
+    ),
+    pomIncludeRepository := { _ => false },
+    useGpg := true,
+
     releaseTagName := (version in ThisBuild).value,
     releaseTagComment := s"Release ${(version in ThisBuild).value} from build ${sys.env.getOrElse("TRAVIS_BUILD_ID", "None")}",
     releaseNextVersion := {
@@ -19,15 +54,6 @@ lazy val root = (project in file("."))
         .map(_.bump(releaseVersionBump.value).string).getOrElse(sbtrelease.versionFormatError(ver))
     }
   )
-
-pomExtra :=
-  <licenses>
-    <license>
-      <name>Apache License, Version 2.0</name>
-      <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
 
 // Defines the release process
 releaseIgnoreUntrackedFiles := true
